@@ -1,0 +1,24 @@
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <title>Title</title>
+ </head>
+    <body>
+       <table border = 1>
+          <thead>
+             <td>uni name</td>
+             <td>lecturer</td>
+             <td>outline</td>
+             <td>open semester</td>
+          </thead>
+          {% for row in rows %}
+             <tr>
+                <td>{{row["un"]}}</td>
+                <td>{{row["lecturer"]}}</td>
+                <td>{{row["outline"]}}</td>
+                <td>{{row["opensemester"]}}</td>
+             </tr>
+          {% endfor %}
+       </table>
+    </body>
+ </html>
