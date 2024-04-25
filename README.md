@@ -1,5 +1,12 @@
 # CITS3403 Group Project
 
+## Instructions to run
+
+# Ensure dependencies are install via pip install -r requirements.txt
+# perform python3 app.py to start the flask server
+# Go to http://192.168.86.37:4000
+
+
 ## Temporary criteria to avoid going to LMS (To be deleted)
 
 1. a description of the purpose of the application, explaining the its design and use.
