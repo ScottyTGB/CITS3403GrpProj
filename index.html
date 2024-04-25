@@ -16,13 +16,22 @@
   <title>Computute</title>
 </head>
 <!-- Navbar -->
-<nav class="navbar">
+<nav class="nav fixed-top" style="background: transparent; width: 100%; z-index: 1000;">
   <div class="container">
-    <a class="">Navbar</a>
-    <form class="d-flex" role="search">
-      <input class="" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn" type="submit">Search</button>
-    </form>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <a class="navbar-brand" href="#">Logo</a>
+      </div>
+      <div>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+      <div>
+        <button class="btn btn-primary" type="button">Login</button>
+      </div>
+    </div>
   </div>
 </nav>
 <body>
