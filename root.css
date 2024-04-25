@@ -1,0 +1,9 @@
+/* For all texts */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* For logos and large texts */
+.logo, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Verdana', sans-serif;
+}
