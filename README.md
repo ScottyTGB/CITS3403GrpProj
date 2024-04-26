@@ -2,9 +2,10 @@
 
 ## Instructions to run
 
-# Ensure dependencies are install via pip install -r requirements.txt
-# perform python3 app.py to start the flask server
-# To open the dev server, CTRL + Click on one of the IP addresses OR go to localhost:4000
+# Ensure you are in a virtual environment such as venv via source {pathtovenv}/bin/activate (Virtual environments are different for everyone, but venv from python >=3.10 will work)
+# Ensure dependencies are installed via pip install -r requirements.txt
+# Start the flask server via python3 app.py
+# To open the dev server, CTRL + Click on one of the IP addresses in your terminal OR go to https://localhost:4000
 
 
 ## Temporary criteria to avoid going to LMS (To be deleted)
