@@ -4,7 +4,7 @@
 
 # Ensure dependencies are install via pip install -r requirements.txt
 # perform python3 app.py to start the flask server
-# Go to http://192.168.86.37:4000
+# To open the dev server, CTRL + Click on one of the IP addresses OR go to localhost:4000
 
 
 ## Temporary criteria to avoid going to LMS (To be deleted)
