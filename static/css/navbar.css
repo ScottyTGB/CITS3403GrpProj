@@ -1,6 +1,25 @@
 nav {
-    background: transparent;
-    width: 100%;
-    z-index: 1000;
-    height: 80px;
+  background: transparent;
+  width: 100%;
+  z-index: 1000;
+  height: 80px;
+}
+
+.nav-brand {
+  font-size: 1.5em;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+h2.nav-brand1, h2.nav-brand2 {
+  display: inline-block;
+}
+
+h2.nav-brand1 {
+  color: rgb(10, 38, 71);
+}
+
+h2.nav-brand2 {
+  font-family: Pacifico, cursive !important;
+  color: rgb(44, 116, 179);
 }
