@@ -13,7 +13,7 @@ def home():
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
-    if request.form['password'] == 'GASDA' and request.form['username'] == 'admin':
+    if request.form['password'] == 'ASDF' and request.form['username'] == 'admin':
         session['logged_in'] = True
     else:
         flash('wrong password!')
