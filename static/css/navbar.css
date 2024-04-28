@@ -3,6 +3,11 @@ nav {
   width: 100%;
   z-index: 1000;
   height: 80px;
+  transition: background 0.3s ease-in-out;
+}
+
+nav.scrolled {
+  background: white;
 }
 
 .nav-brand {
@@ -40,5 +45,5 @@ h2.nav-brand2 {
   border: none;
   border-radius: 0 5px 5px 0;
   font-size: 1em;
-  padding: 0 15px;
+  padding: 0 15px 0 13px; /* Visually centered */
 }
