@@ -2,14 +2,35 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <title>Title</title>
+ <script type="text/javascript">
+   function goToPage(page) {
+       window.location = page;
+   }
+</script>
  </head>
     <body>
      <form action = "{{ url_for('add_student') }}" method = "POST">
-          <p>uni name<input type = "text" name = "uniname" /></p>
-          <p>lecturer<textarea name = "lecturer" ></textarea></p>
-          <p>outline<input type = "text" name = "outline" /></p>
-          <p>open semester<input type = "text" name = "opensemester" /></p>
+          <p>userID<input type = "text" name = "userID" /></p>
+          <p>userName<input type = "text" name = "userName" ></textarea></p>
+          <p>userEmail<input type = "text" name = "userEmail" /></p>
+          <p>userPassword<input type = "text" name = "userPassword" /></p>
           <input type = "submit" value = "submit" />
+          <input type="button" value="showDB" onclick="goToPage('/show')">
        </form>
+       <form action = "{{ url_for('add_tutor') }}" method = "POST">
+         <p>tutorID<input type = "text" name = "tutorID" /></p>
+         <p>tutorName<input type = "text" name = "tutorName" ></textarea></p>
+         <p>tutorEmail<input type = "text" name = "tutorEmail" /></p>
+         <input type = "submit" value = "submit" />
+         <input type="button" value="showDB" onclick="goToPage('/show')">
+      </form>
+      <form action = "{{ url_for('add_request') }}" method = "POST">
+         <p>requestID<input type = "text" name = "requestID" /></p>
+         <p>userID<input type = "text" name = "userID" ></textarea></p>
+         <p>tutorID<input type = "text" name = "tutorID" /></p>
+         <p>unit<input type = "text" name = "unit" /></p>
+         <input type = "submit" value = "submit" />
+         <input type="button" value="showDB" onclick="goToPage('/show')">
+      </form>
     </body>
  </html>

@@ -2,8 +2,15 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <title>Title</title>
+ <script type="text/javascript">
+   function goToPage(page) {
+       window.location = page;
+   }
+</script>
  </head>
     <body>
        operation outcome : {{ msg }}
+       <input type="button" value="goBack" onclick="goToPage('/')">
+       <input type="button" value="showDB" onclick="goToPage('/show')">
     </body>
  </html>

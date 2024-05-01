@@ -2,23 +2,59 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <title>Title</title>
+ <script type="text/javascript">
+   function goToPage(page) {
+       window.location = page;
+   }
+</script>
  </head>
     <body>
        <table border = 1>
           <thead>
-             <td>uni name</td>
-             <td>lecturer</td>
-             <td>outline</td>
-             <td>open semester</td>
+             <td>userID</td>
+             <td>userName</td>
+             <td>userEmail</td>
+             <td>userPassword</td>
           </thead>
-          {% for row in rows %}
+          {% for row in rows_students %}
              <tr>
-                <td>{{row["un"]}}</td>
-                <td>{{row["lecturer"]}}</td>
-                <td>{{row["outline"]}}</td>
-                <td>{{row["opensemester"]}}</td>
+                <td>{{row["userID"]}}</td>
+                <td>{{row["userName"]}}</td>
+                <td>{{row["userEmail"]}}</td>
+                <td>{{row["userPassword"]}}</td>
              </tr>
           {% endfor %}
        </table>
+       <table border = 1>
+         <thead>
+            <td>tutorID</td>
+            <td>tutorName</td>
+            <td>tutorEmail</td>
+         </thead>
+         {% for row in rows_tutors %}
+            <tr>
+               <td>{{row["tutorID"]}}</td>
+               <td>{{row["tutorName"]}}</td>
+               <td>{{row["tutorEmail"]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      <table border = 1>
+         <thead>
+            <td>requestID</td>
+            <td>userID</td>
+            <td>tutorID</td>
+            <td>unit</td>
+         </thead>
+         {% for row in rows_request %}
+            <tr>
+               <td>{{row["requestID"]}}</td>
+               <td>{{row["userID"]}}</td>
+               <td>{{row["tutorID"]}}</td>
+               <td>{{row["unit"]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      <input type="button" value="goBack" onclick="goToPage('/')">
     </body>
  </html>
