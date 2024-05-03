@@ -3,8 +3,10 @@ from flask import render_template, request
 import sqlite3
 
 app = Flask(__name__)
+
 app.config["DATABASE"] = "user.db"
 app.config["DATABASE"] = "tutor.db"
+app.config["DATABASE"] = "request.db"
 
 def get_db():
     db = sqlite3.connect(app.config["DATABASE"])
@@ -17,7 +19,7 @@ def init_db():
         with app.open_resource("schema.sql",mode = 'r') as f:
             db.cursor().executescript(f.read())
         db.commit()
- 
+
 
 @app.route("/",methods = ['POST', 'GET'])
 def create_student():
@@ -42,7 +44,6 @@ def add_student():
     finally:
         return render_template("result.html",msg = msg) 
         # con.close()   
-
 
 @app.route('/addtutor',methods = ['POST', 'GET'])
 def add_tutor():
@@ -82,8 +83,6 @@ def add_request():
     finally:      
         return render_template("result.html",msg = msg) 
 
-
-
 # show the result from database
 @app.route('/show')
 def show_student():
@@ -114,7 +113,32 @@ def show_student():
     con_request.close()
 
     return render_template("show.html", rows_students=rows_students, rows_tutors=rows_tutors, rows_request=rows_request)
-  
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['userName']
+        password = request.form['userPassword']
+        
+        # Connect to the user database
+        conn = sqlite3.connect('user.db')
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        
+        # Execute the SQL query to find the user
+        cur.execute('SELECT * FROM students WHERE userName = ? AND userPassword = ?', (username, password))
+        user = cur.fetchone()
+        
+        # Close the database connection
+        conn.close()
+        
+        if user:
+            return 'login success'  # Assume you have a success page
+        else:
+            return 'Login Failed. Invalid username or password'
+    return render_template('login.html')
+
 
 if __name__ == "__main__":
+    init_db()
     app.run()
