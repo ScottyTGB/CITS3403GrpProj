@@ -1,8 +1,46 @@
-from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+
 import os
+env_path = os.path.join('.config', 'config.env')
+
+if os.path.exists(env_path):
+    with open(env_path) as f:
+        for line in f:
+            key, value = line.strip().split('=')
+            os.environ[key] = value
+
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = secret_key = os.environ.get('SECRET_KEY')
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+class User(UserMixin):
+
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
+
+@login_manager.user_loader
+def load_user(username):
+    # Replace this with user data access
+    users = {
+        'admin': User(1, 'admin', 'adasdsadwewarsdagertrtegtrg')
+    }
+    return users.get(username)
+
+#def hash_pass(password):
+
+@app.route('/profile')
+def profile():
+    print(session['user'])
+    if (session['user']):
+        return f"Welcome {session['user']}"
+    return f"error"
 
 @app.route('/')
 def sendhome():
@@ -13,21 +51,38 @@ def home():
     return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
-def do_admin_login():
-    if request.form['password'] == 'ASDF' and request.form['username'] == 'admin':
-        session['logged_in'] = True
-        return redirect("/home")
+def do_login():
+    username = request.form['username']
+    password = request.form['password']
+    
+    user = load_user(username)
+    
+    if user and user.password == password:
+        login_user(user)
+        session['user'] = username
+        print(session['user'])
+        return redirect('/home')
     else:
-        flash('wrong password!')
-    return load_login()
+        return 'Invalid username or password'       
 
 @app.route('/login', methods=['GET'])
 def load_login():
     return render_template("login.html")
 
+@app.route('/register', methods=['GET'])
+def load_register():
+    return render_template("register.html")
+
+@app.route('/register', methods=['POST'])
+def do_register():
+    #Check if username already taken
+    print("implementing")
+    #else hash password and save to databasea
+
 @app.route("/logout")
+@login_required
 def logout():
-    session['logged_in'] = False
+    logout_user()
     return home()
 
 if __name__ == "__main__":
