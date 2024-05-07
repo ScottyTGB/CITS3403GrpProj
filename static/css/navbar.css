@@ -1,0 +1,56 @@
+nav {
+  background: transparent;
+  width: 100%;
+  z-index: 1000;
+  height: 80px;
+  transition: background 0.3s ease-in-out;
+}
+
+nav.scrolled {
+  background: white;
+}
+
+.nav-brand {
+  font-size: 1.5em;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+h2.nav-brand1, h2.nav-brand2 {
+  display: inline-block;
+}
+
+h2.nav-brand1 {
+  color: rgb(10, 38, 71);
+}
+
+h2.nav-brand2 {
+  font-family: Pacifico, cursive !important;
+  color: rgb(44, 116, 179);
+}
+
+.search-field {
+  width: 100%;
+  height: 40px;
+  border: 1px solid;
+  border-color: rgb(44, 116, 179);
+  border-radius: 5px 0 0 5px;
+  padding: 0 20px;
+  font-size: 1em;
+  transition: border-color 0.1s ease-in-out;
+}
+
+.search-field:focus {
+  outline: none;
+  border-color: rgb(10, 38, 71);
+}
+
+.search-btn {
+  height: 40px;
+  background: rgb(44, 116, 179);
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  font-size: 1em;
+  padding: 0 15px 0 13px; /* Visually centered */
+}

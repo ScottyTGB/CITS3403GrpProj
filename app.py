@@ -5,19 +5,25 @@ import os
 app = Flask(__name__)
 
 @app.route('/')
+def sendhome():
+    return redirect("/home")
+
+@app.route('/home')
 def home():
-    if not session.get('logged_in'):
-        return render_template('login.html')
-    else:
-        return 'Hello Boss!  <a href="/logout">Logout</a>'
+    return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
-    if request.form['password'] == 'GASDA' and request.form['username'] == 'admin':
+    if request.form['password'] == 'ASDF' and request.form['username'] == 'admin':
         session['logged_in'] = True
+        return redirect("/home")
     else:
         flash('wrong password!')
-    return home()
+    return load_login()
+
+@app.route('/login', methods=['GET'])
+def load_login():
+    return render_template("login.html")
 
 @app.route("/logout")
 def logout():
