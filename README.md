@@ -17,3 +17,6 @@
 5. instructions for how to run the tests for the application.
 
 
+TO RUN FLASK SERVER:
+create config.env folder in root
+fill with SECRET_KEY=<SECRET> (Secure passkey)
