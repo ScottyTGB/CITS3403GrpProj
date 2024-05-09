@@ -6,7 +6,8 @@ import initdb
 import os
 #TODO
 #Add in remember me cookie
-
+#Change all routes to be if statements rather than seperate route methods
+#SQLalchemy security stuff
 
 #Find and set secret key, start app
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,7 +29,7 @@ app.config["DATABASE"] = "tutor.db"
 app.config["DATABASE"] = "request.db"
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#Create user and login manager
+#Create user, request and login manager
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -39,6 +40,15 @@ class User(UserMixin):
         self.id = id
         self.username = username
         self.password = password
+
+class Request:
+
+    def __init__(self, id, requestor, tutor, unit):
+        self.id = id
+        self.requestor = requestor
+        self.tutor = tutor
+        self.unit = unit
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Helper functions
@@ -48,6 +58,22 @@ def hash_pass(password):
 
 def check_hash(hash,password):
     return check_password_hash(hash,password)
+
+def get_requests():
+    requests_array = []
+    con_requests = sqlite3.connect("request.db")
+    cur_requests = con_requests.cursor()
+    cur_requests.execute("select * from user")
+    for row in cur_requests.fetchall():
+        requests_array.append([str(value) for value in row])
+    return(requests_array)
+
+def load_request(requestID):
+    requests_dict = {}
+    request_db = get_requests()
+    for request in request_db:
+        requests_dict[request[0]] = Request(*request)
+    return requests_dict.get(requestID)
 
 def get_users():
     user_array = []
@@ -83,7 +109,6 @@ def get_db():
     db = sqlite3.connect(app.config["DATABASE"])
     db.row_factory = sqlite3.Row
     return db
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Testing user
 @app.route('/profile')
@@ -92,6 +117,59 @@ def profile():
     if (session['user']):
         return f"Welcome {session['user']}"
     return f"error"
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Create Request route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/createrequest', methods=["GET","POST"])
+def create_request():
+    if request.method == "GET":
+        return render_template("createrequest.html")
+    elif request.method == "POST":
+        requestor = session['userID']
+        unit = request.form['unit']
+
+        if(requestor and unit):
+            try:
+                with sqlite3.connect("request.db") as con_user:  
+                    cur_user = con_user.cursor()    
+                    cur_user.execute("INSERT INTO request (userID,tutorID,unit) VALUES (?,?,?)",(requestor,None,unit))    
+                    con_user.commit()
+            except:
+                con_user.rollback()
+                flash("Eror entering request to database")
+        else:
+            flash("Enter valid unit name")
+        return redirect('/requests')    
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Requests route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/requests', methods=["GET","POST"])
+def view_requests():
+    if request.method == "GET":
+
+        return render_template("requests.html")
+    elif request.method == "POST":
+        #When tutor clicks accept
+        #Need to be able to get details of request from table, HTML will have ID, call by ID and then check if requestor and tutor ID are the same if so then fail
+        #Get requestID from HTML
+        requestID = None
+        requestPicked = load_request(requestID)
+        tutor = session['userID']
+        if(tutor == requestPicked.requestor):
+            flash("Cannot accept own request")
+        if(tutor):
+            try:
+                with sqlite3.connect("request.db") as con_user:  
+                    cur_user = con_user.cursor()    
+                    #Change this to be an update clause updatign the value of tutorID to sessionID
+                    #cur_user.execute("INSERT INTO request (userID,tutorID,unit) VALUES (?,?,?)",(requestor,None,unit))    
+                    con_user.commit()
+            except:
+                con_user.rollback()
+                flash("Eror entering request to database")            
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Home route
@@ -117,6 +195,7 @@ def do_login():
     if user and check_hash(user.password,password):
         login_user(user)
         session['user'] = username
+        session['userID'] = user.id
         print(session['user'])
         return redirect('/home')
     else:
