@@ -163,12 +163,15 @@ def view_requests():
         cur_requests.execute("select * from request")   
         for row in cur_requests.fetchall():
             requests.append([str(value) for value in row])
-        users_requesting = []
         request_strings = []
         for request_info in requests:
-            users_requesting.append(get_user_by_id(request_info[1]))
-            request_strings.append(f"{users_requesting} has requested tutoring in {request_info[3]}")
-        print(users_requesting[0])
+            if(request_info != []):
+                print(request_info)
+                user_requesting = get_user_by_id(request_info[1])
+                print(user_requesting)
+                request_strings.append(f"{list(user_requesting[0])[1]} has requested tutoring in {request_info[3]}")
+        print(user_requesting[0][1])
+        print()
         return render_template("requests.html",data=request_strings)
     elif request.method == "POST":
         #When tutor clicks accept
@@ -177,6 +180,7 @@ def view_requests():
         requestID = None
         requestPicked = load_request(requestID)
         tutor = session['userID']
+        print(tutor)
         if(tutor == requestPicked.requestor):
             flash("Cannot accept own request")
         if(tutor):

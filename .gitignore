@@ -1,2 +1,4 @@
-env
+.env
 user.db
+config.env
+__pycache__
