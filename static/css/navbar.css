@@ -10,6 +10,18 @@ nav.scrolled {
   background: white;
 }
 
+button.nav-toggler {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.bi-list {
+  font-size: 2.5em;
+  padding: 15px 15px;
+  background: transparent;
+}
+
 .nav-brand {
   font-size: 1.5em;
   font-weight: 700;
