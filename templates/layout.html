@@ -23,10 +23,14 @@
     {% endblock %}
   </head>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg fixed-top">
+  <nav class="navbar navbar-expand-lg fixed-top d-lg-flex">
     <div class="container d-flex justify-content-between">
       <a class="nav-brand" href="/home"><h2 class="nav-brand1">COMPU</h2><h2 class="nav-brand2">TUTE</h2></a>
-      <div class="d-flex align-items-center">
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <!-- Insert your custom icon here -->
+        <img src="path-to-your-icon" alt="Menu">
+      </button>
+      <div class="d-none d-lg-flex align-items-center">
         <form class="d-flex">
           <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
           <button class="search-btn" type="submit"><i class="bi bi-search"></i></button>
@@ -51,8 +55,18 @@
       </div>
     </div>
   </nav>
+
+  <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- The same menu items as above -->
+    </div>
+  </div>
   <body>
-    <div class="content">{% block body %}{% endblock %}</div>
+    <div class="content">{% block content %}{% endblock %}</div>
     <div class="footer">{% block footer %}{% endblock %}</div>
   </body>
 </html>
