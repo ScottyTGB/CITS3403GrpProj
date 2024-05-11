@@ -25,8 +25,14 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top d-lg-flex">
     <div class="container d-flex justify-content-between">
-      <a class="nav-brand mx-auto d-lg-none" href="/home"><h2 class="nav-brand1">COMPU</h2><h2 class="nav-brand2">TUTE</h2></a>
-      <a class="nav-brand d-none d-lg-block" href="/home"><h2 class="nav-brand1">COMPU</h2><h2 class="nav-brand2">TUTE</h2></a>
+      <a class="nav-brand mx-auto d-lg-none" href="/home">
+        <h2 class="nav-brand1">COMPU</h2>
+        <h2 class="nav-brand2">TUTE</h2>
+      </a>
+      <a class="nav-brand d-none d-lg-block" href="/home">
+        <h2 class="nav-brand1">COMPU</h2>
+        <h2 class="nav-brand2">TUTE</h2>
+      </a>
       <button class="nav-toggler d-lg-none position-fixed bottom-0 end-0 mb-3 me-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         <i class="bi bi-list"></i>
       </button>
@@ -34,16 +40,20 @@
         <div class="d-none d-lg-flex align-items-center">
           <form class="d-flex">
             <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
-            <button class="search-btn" type="submit"><i class="bi bi-search"></i></button>
+            <button class="search-btn" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
           </form>
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Tutoring Requests
-              </a>
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Tutoring Requests </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/requests">View Tutoring Requests</a></li>
-                <li><a class="dropdown-item" href="/createrequest">Create a tutoring request</a></li>
+                <li>
+                  <a class="dropdown-item" href="/createrequest">Request a tutor</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/requests">Accept a tutoring request</a>
+                </li>
               </ul>
             </li>
             <li class="nav-item">
@@ -57,15 +67,17 @@
       </div>
     </div>
   </nav>
-
   <!-- Offcanvas Nav -->
   <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
-      <h1>HI</h1>
+    <div class="offcanvas-body text-center flex-container">
+      <h1><a href="">Join Us</a></h1>
+      <h1><a href="">Login</a></h1>
+      <h1><a href="">Request a Tutor</a></h1>
+      <h1><a href="">Accept a Tutoring Request</a></h1>
     </div>
   </div>
   <body>
