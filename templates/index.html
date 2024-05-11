@@ -1,4 +1,26 @@
 {% extends "layout.html" %}
-{% block title %}CompuTUTE{% endblock %}
+{% block head %}
+{{ super() }}
+<!-- Javascript -->
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+<title>{% block title %}HI{% endblock %}</title>
+{% endblock %}
 {% block content %}
+<div class="  full-height">
+  <div id="carouselExampleIndicators" class="carousel slide h-100" data-bs-ride="carousel">
+    <div class="carousel-inner h-100">
+      <div class="carousel-item active h-100">
+        <div class="d-flex flex-column justify-content-center align-items-center h-100" style="background: linear-gradient(to bottom, lightblue, white);">
+          <h5 class="mb-4">"This is a quote"</h5>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-secondary" type="button">Search</button>
+          </div>
+          <a href="#" class="btn btn-primary">Read More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
