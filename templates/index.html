@@ -2,25 +2,55 @@
 {% block head %}
 {{ super() }}
 <!-- Javascript -->
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 <!-- Stylesheets -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-<title>{% block title %}HI{% endblock %}</title>
+<title>{% block title %}CompuTUTE{% endblock %}</title>
 {% endblock %}
 {% block content %}
-<div class="  full-height">
+<div class="full-height">
   <div id="carouselExampleIndicators" class="carousel slide h-100" data-bs-ride="carousel">
     <div class="carousel-inner h-100">
       <div class="carousel-item active h-100">
-        <div class="d-flex flex-column justify-content-center align-items-center h-100" style="background: linear-gradient(to bottom, lightblue, white);">
-          <h5 class="mb-4">"This is a quote"</h5>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-secondary" type="button">Search</button>
+        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+          <h1 class="mb-4 text-center">Personalized Tutoring For CITS Units</h1>
+          <h3 class="text-center">Find the right tutor, right away</h3>
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="input-group mb-3">
+              <form class="d-flex">
+                <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
+                <button class="search-btn" type="submit">
+                  <i class="bi bi-search"></i>
+                </button>
+              </form>
+            </div>
           </div>
-          <a href="#" class="btn btn-primary">Read More</a>
+          <a id="readMore" class="carousel-readmore">Read More</a>
         </div>
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
+
+<div class="container">
+  <h2>Lorem Ipsum</h2>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Phasellus auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Donec auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+</div><div class="container">
+  <h2>Lorem Ipsum</h2>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Phasellus auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Donec auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+</div><div class="container">
+  <h2>Lorem Ipsum</h2>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Phasellus auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Donec auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+</div><div class="container">
+  <h2>Lorem Ipsum</h2>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Phasellus auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+  <p>Donec auctor, nunc in luctus rutrum, nunc nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi. Sed euismod, nisl ac aliquam tincidunt, elit nunc tincidunt nunc, id aliquam mauris nunc id nunc. Sed nec semper nunc. Nulla facilisi.</p>
+</div>
+{% endblock %}</div></div>
