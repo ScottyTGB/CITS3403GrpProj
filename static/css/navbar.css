@@ -61,15 +61,15 @@ button.nav-toggler {
   text-decoration: none;
 }
 
-h2.nav-brand1, h2.nav-brand2 {
+.nav-brand1, .nav-brand2 {
   display: inline-block;
 }
 
-h2.nav-brand1 {
+.nav-brand1 {
   color: rgb(10, 38, 71);
 }
 
-h2.nav-brand2 {
+.nav-brand2 {
   font-family: Pacifico, cursive !important;
   color: rgb(44, 116, 179);
 }

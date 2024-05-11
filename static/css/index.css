@@ -1,4 +1,4 @@
-/* Static Carousel */
+/* Carousel */
 .full-height {
   height: 100vh;
   background-image: linear-gradient(360deg,rgba(0,163,255,.04) 27%,rgba(0,163,255,.2) 90%);
@@ -24,4 +24,28 @@
 
 .carousel-readmore:hover {
   background-color: rgb(10, 38, 71);
+}
+
+/* Services */
+.services {
+  background-color: rgb(229, 240, 255);
+  padding: 20px 0;
+}
+
+.services i {
+  font-size: 3em;
+  color: rgb(44, 116, 179);
+}
+
+.services .service-box {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.service-box h3 {
+  text-align: center;
 }
