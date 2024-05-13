@@ -7,7 +7,7 @@ def create_user_table():
     conn.close()  
 def create_tutor_table():
     conn = sqlite3.connect('tutor.db') 
-    conn.execute('CREATE TABLE tutor (tutorID INTEGER PRIMARY KEY, tutorEmail TEXT)') 
+    conn.execute('CREATE TABLE tutor (tutorID INTEGER PRIMARY KEY, userID INTEGER)') 
     conn.close()  
 def create_request_table():
     conn = sqlite3.connect('request.db') 

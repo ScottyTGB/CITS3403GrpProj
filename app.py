@@ -8,6 +8,7 @@ import os
 #Add in remember me cookie
 #Change all routes to be if statements rather than seperate route methods
 #SQLalchemy security stuff
+#Flash doesn't work?
 
 #Find and set secret key, start app
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,6 +85,13 @@ def get_users():
         user_array.append([str(value) for value in row])
     return(user_array)
 
+def get_user_by_id(userID):
+    con_students = sqlite3.connect("user.db")  
+    cur_students = con_students.cursor()        
+    cur_students.execute(f"select * from user where userID = {userID}")   
+    
+    return(cur_students.fetchall())    
+
 @login_manager.user_loader
 def load_user(username):
     user_dict = {}
@@ -92,6 +100,7 @@ def load_user(username):
         user_dict[user_data[1]] = User(*user_data)
 
     return user_dict.get(username)
+  
 
 def check_databases():
     dbs = ["request.db","tutor.db","user.db"]
@@ -126,13 +135,13 @@ def create_request():
     if request.method == "GET":
         return render_template("createrequest.html")
     elif request.method == "POST":
-        requestor = session['userID']
         unit = request.form['unit']
-
+        print(unit)
+        requestor = session['userID']
         if(requestor and unit):
             try:
                 with sqlite3.connect("request.db") as con_user:  
-                    cur_user = con_user.cursor()    
+                    cur_user = con_user.cursor()
                     cur_user.execute("INSERT INTO request (userID,tutorID,unit) VALUES (?,?,?)",(requestor,None,unit))    
                     con_user.commit()
             except:
@@ -148,8 +157,22 @@ def create_request():
 @app.route('/requests', methods=["GET","POST"])
 def view_requests():
     if request.method == "GET":
-
-        return render_template("requests.html")
+        requests = []
+        con_requests = sqlite3.connect("request.db")  
+        cur_requests = con_requests.cursor()        
+        cur_requests.execute("select * from request")   
+        for row in cur_requests.fetchall():
+            requests.append([str(value) for value in row])
+        request_strings = []
+        for request_info in requests:
+            if(request_info != []):
+                print(request_info)
+                user_requesting = get_user_by_id(request_info[1])
+                print(user_requesting)
+                request_strings.append(f"{list(user_requesting[0])[1]} has requested tutoring in {request_info[3]}")
+        print(user_requesting[0][1])
+        print()
+        return render_template("requests.html",data=request_strings)
     elif request.method == "POST":
         #When tutor clicks accept
         #Need to be able to get details of request from table, HTML will have ID, call by ID and then check if requestor and tutor ID are the same if so then fail
@@ -157,6 +180,7 @@ def view_requests():
         requestID = None
         requestPicked = load_request(requestID)
         tutor = session['userID']
+        print(tutor)
         if(tutor == requestPicked.requestor):
             flash("Cannot accept own request")
         if(tutor):
@@ -195,6 +219,7 @@ def do_login():
     if user and check_hash(user.password,password):
         login_user(user)
         session['user'] = username
+        print(user.id)
         session['userID'] = user.id
         print(session['user'])
         return redirect('/home')
