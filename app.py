@@ -1,13 +1,16 @@
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
-from initdb import db, User, Tutor, Request
+from flask_sqlalchemy import SQLAlchemy
+from initdb import User, Tutor, Request
 import os
 #TODO
 #Add in remember me cookie
 #Change all routes to be if statements rather than seperate route methods
 #SQLalchemy security stuff
 #Flash doesn't work?
+
+
 
 #Find and set secret key, start app
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,13 +33,14 @@ app.config['SECRET_KEY'] = secret_key = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+db = SQLAlchemy(app)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Create user, request and login manager
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # class User(UserMixin):
 
@@ -52,8 +56,30 @@ login_manager.init_app(app)
 #         self.requestor = requestor
 #         self.tutor = tutor
 #         self.unit = unit
-class UserModel(UserMixin, User):
-    pass
+# class UserModel(UserMixin, User):
+#     pass
+
+class User(db.Model, UserMixin):
+    userID = db.Column(db.Integer, primary_key=True)
+    userEmail = db.Column(db.String(150), unique=True, nullable=False)
+    userPassword = db.Column(db.String(150), nullable=False)
+    requests = db.relationship('Request', back_populates='user')
+    
+    def get_id(self):
+        return self.userID
+
+class Tutor(db.Model):
+    tutorID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.userID'), nullable=False)
+    requests = db.relationship('Request', back_populates='tutor')
+
+class Request(db.Model):
+    requestID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.userID'))
+    tutorID = db.Column(db.Integer, db.ForeignKey('tutor.tutorID'))
+    unit = db.Column(db.String(150), nullable=False)
+    user = db.relationship('User', back_populates='requests')
+    tutor = db.relationship('Tutor', back_populates='requests')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Helper functions
@@ -87,16 +113,12 @@ def get_user_by_id(userID):
 #     return user_dict.get(username)
 @login_manager.user_loader
 def load_user(userID):
-    return UserModel.query.get(int(userID))
+    return User.query.get(int(userID))
 
 def check_databases():
     with app.app_context():
         db.create_all()
 
-# def get_db():
-#     db = sqlite3.connect(app.config["DATABASE"])
-#     db.row_factory = sqlite3.Row
-#     return db
 
 #Testing user
 @app.route('/profile')
@@ -110,7 +132,7 @@ def profile():
 #Create Request route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/createrequest', methods=["GET","POST"])
-@login_required
+# @login_required
 def create_request():
     if request.method == "GET":
         return render_template("createrequest.html")
@@ -171,18 +193,18 @@ def create_request():
 #             except:
 #                 con_user.rollback()
 #                 flash("Eror entering request to database")            
-@login_required
+# @login_required
 def view_requests():
     if request.method == "GET":
-        requests = get_requests()
+        requests = Request.query.all()
         request_strings = []
         for request_info in requests:
-            user_requesting = get_user_by_id(request_info.userID)
+            user_requesting = User.query.get(request_info.userID)
             request_strings.append(f"{user_requesting.userEmail} has requested tutoring in {request_info.unit}")
         return render_template("requests.html", data=request_strings)
     elif request.method == "POST":
         requestID = request.form.get('requestID')
-        requestPicked = load_request(requestID)
+        requestPicked = Request.query.get(requestID)
         tutor = session['userID']
         if tutor == requestPicked.userID:
             flash("Cannot accept own request")
@@ -190,9 +212,11 @@ def view_requests():
             try:
                 requestPicked.tutorID = tutor
                 db.session.commit()
+                flash("Request accepted successfully")
             except Exception as e:
                 db.session.rollback()
                 flash("Error entering request to database: " + str(e))
+        return redirect(url_for('view_requests'))
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Home route
@@ -208,9 +232,10 @@ def home():
 
 #Login route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@app.route('/login', methods=['POST'])
-def do_login():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
+        print_user_data() 
         username = request.form['username']
         password = request.form['password']
         
@@ -220,47 +245,20 @@ def do_login():
             login_user(user)
             session['user'] = username
             session['userID'] = user.userID
-            return redirect('/home')
+            print(f"Login successful for user: {username}") 
+            return redirect(url_for('home'))
         else:
+            print(f"Login failed for user: {username}") 
             flash('Invalid username or password')
     return render_template("login.html")      
-
-# @app.route('/login', methods=['GET'])
-# def load_login():
-#     return render_template("login.html")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Register route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-# @app.route('/register', methods=['GET'])
-# def load_register():
-#     return render_template("register.html")
-
-# @app.route('/register', methods=['POST'])
-# def do_register():
-#     username = request.form['username']
-#     password = request.form['password']
-#     user = load_user(username)
-#     if user:
-#         flash("Username already taken")
-#         #Create login button for user to move to login
-#     elif(username and password):
-#         hashed = hash_pass(password)
-#         try:
-#             with sqlite3.connect("user.db") as con_user:  
-#                 cur_user = con_user.cursor()    
-#                 cur_user.execute("INSERT INTO user (userEmail,userPassword) VALUES (?,?)",(username,hashed))    
-#                 con_user.commit()
-#             do_login()                     
-#         except:
-#             con_user.rollback()
-#             flash("Eror entering user to database")
-#     else:
-#         flash("Enter valid username and password")
-#     return redirect('/home')
 @app.route('/register', methods=['GET', 'POST'])
 def do_register():
     if request.method == 'POST':
+        print_user_data() 
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(userEmail=username).first()
@@ -292,6 +290,12 @@ def logout():
     logout_user()
     return redirect('/home')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def print_user_data():
+    users = User.query.all()
+    for user in users:
+        print(f'User ID: {user.userID}, Email: {user.userEmail}, Password: {user.userPassword}')
+
+
 
 #Main
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
