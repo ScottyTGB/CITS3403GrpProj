@@ -1,15 +1,21 @@
-import sqlite3
+from flask_sqlalchemy import SQLAlchemy
 
+db = SQLAlchemy()
 
-def create_user_table():
-    conn = sqlite3.connect('user.db') 
-    conn.execute('CREATE TABLE user (userID INTEGER PRIMARY KEY, userEmail TEXT, userPassword TEXT)') 
-    conn.close()  
-def create_tutor_table():
-    conn = sqlite3.connect('tutor.db') 
-    conn.execute('CREATE TABLE tutor (tutorID INTEGER PRIMARY KEY, userID INTEGER)') 
-    conn.close()  
-def create_request_table():
-    conn = sqlite3.connect('request.db') 
-    conn.execute('CREATE TABLE request (requestID INTEGER PRIMARY KEY, userID TEXT, tutorID TEXT, unit TEXT)') 
-    conn.close() 
+class User(db.Model):
+    __tablename__ = 'user'
+    userID = db.Column(db.Integer, primary_key=True)
+    userEmail = db.Column(db.String, nullable=False)
+    userPassword = db.Column(db.String, nullable=False)
+
+class Tutor(db.Model):
+    __tablename__ = 'tutor'
+    tutorID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.userID'), nullable=False)
+
+class Request(db.Model):
+    __tablename__ = 'request'
+    requestID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.userID'), nullable=False)
+    tutorID = db.Column(db.Integer, db.ForeignKey('tutor.tutorID'), nullable=True)
+    unit = db.Column(db.String, nullable=False)
