@@ -39,7 +39,7 @@ def print_tutor_data():
         print(f'Tutor ID: {tutor.tutorID}, User ID: {tutor.userID}')
 
 if __name__ == "__main__":
-    insert_test_data() 
+    #insert_test_data() 
     print("User Data:")
     print_user_data()
     print("\nRequest Data:")
