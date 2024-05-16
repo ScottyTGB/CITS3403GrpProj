@@ -11,19 +11,19 @@
   <div class="form-container">
     <h1>Request A Tutor</h1>
     <form action="/createrequest" method="POST">
-      <div>
+      <div class="input-group">
       <label for="Unit Code">What is the unit code?</label>
       <input type="text" name="Unit Code" id="Unit Code" placeholder="The 4 letter and 4 number code e.g. CITS1000" required>
       </div>
-      <div>
+      <div class="input-group">
       <label for="Availabilty">What times are you available?</label>
       <input type="text" name="Availability" id="Availabilty" placeholder="Times and dates" required>
       </div>
-      <div>
+      <div class="input-group">
       <label for="Hours">How many hours do you want?</label>
       <input type="number" name="Hours" id="Hours" min="0.5" step="0.5">
       </div>
-      <div>
+      <div class="input-group">
       <label for="Needs">What areas would you like to work on in each subject?</label>
       <textarea id="Needs" name="Needs"></textarea>
       </div>
