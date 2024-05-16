@@ -152,7 +152,31 @@ def create_request():
         return redirect('/requests')    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#Requests route
+#View completed requests route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/completedrequests', methods=["GET"])
+def view_completed_requests():
+    if request.method == "GET":
+        requests = []
+        con_requests = sqlite3.connect("request.db")  
+        cur_requests = con_requests.cursor()        
+        cur_requests.execute("select * from request")   
+        for row in cur_requests.fetchall():
+            requests.append([str(value) for value in row])
+        request_strings = []
+        for request_info in requests:
+            if(request_info != []):
+                print(request_info)
+                user_requesting = get_user_by_id(request_info[1])
+                print(user_requesting)
+                request_strings.append(f"{list(user_requesting[0])[1]} requested tutoring in {request_info[3]} it was answered by {request_info[2]}")
+        print(user_requesting[0][1])
+        return render_template("requests.html",data=request_strings)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#View Requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/requests', methods=["GET","POST"])
 def view_requests():
@@ -170,8 +194,6 @@ def view_requests():
                 user_requesting = get_user_by_id(request_info[1])
                 print(user_requesting)
                 request_strings.append(f"{list(user_requesting[0])[1]} has requested tutoring in {request_info[3]}")
-        print(user_requesting[0][1])
-        print()
         return render_template("requests.html",data=request_strings)
     elif request.method == "POST":
         #When tutor clicks accept
