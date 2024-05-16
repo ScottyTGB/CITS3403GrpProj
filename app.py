@@ -128,6 +128,37 @@ def create_request():
         return redirect('/requests')    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#View my requests route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/myrequests',methods=["GET"])
+@login_required
+def view_my_requests():
+    if request.method == "GET":
+        requests_array = []
+        requests = Request.query.all()
+        for request_info in requests:
+            if(request_info.userID == session['userID'] and request_info.tutorID == None):
+                new_request = {"id": request_info.requestID, "content": f"Your request for {request_info.unit} is yet to be accepted"}
+                requests_array.append(new_request)
+        for request_info in requests:
+            if(request_info.tutorID != None):
+                tutor_responded = Tutor.query.get(request_info.tutorID)
+                tutor_responded_user = User.query.get(tutor_responded.userID)
+                if(tutor_responded_user.userID == session['userID']):
+                    user_requesting = User.query.get(request_info.userID)
+                    new_request = {"id": request_info.requestID, "content": f"You accepted {user_requesting.userEmail}'s request for {request_info.unit}"}
+                    requests_array.append(new_request)
+        for request_info in requests:
+            if(request_info.userID == session['userID'] and request_info.tutorID != None):
+                tutor_responded = Tutor.query.get(request_info.tutorID)
+                tutor_responded_user = User.query.get(tutor_responded.userID)
+                new_request = {"id": request_info.requestID, "content": f"Your request for {request_info.unit} has been completed by {tutor_responded_user.userEmail}"}
+                requests_array.append(new_request)
+        return render_template("myrequests.html", requests=requests_array)    
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 #View completed requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/completedrequests', methods=["GET"])
@@ -144,14 +175,13 @@ def view_completed_requests():
                 tutor_responded_user = User.query.get(tutor_responded.userID)
                 new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has completed tutoring in {request_info.unit} by {tutor_responded_user.userEmail}"}
                 requests_array.append(new_request)
-        return render_template("requests.html", requests=requests_array)
+        return render_template("completedrequests.html", requests=requests_array)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 #View Requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/requests', methods=["GET"])           
-# @login_required
 def view_requests():
     if request.method == "GET":
         requests_array = []
