@@ -56,6 +56,9 @@ class Tutor(db.Model):
     userID = db.Column(db.Integer, db.ForeignKey('user.userID'), nullable=False)
     requests = db.relationship('Request', back_populates='tutor')
 
+    def get_id(self):
+        return self.userID    
+
 class Request(db.Model):
     requestID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('user.userID'))
@@ -133,14 +136,15 @@ def view_completed_requests():
         requests_array = []
         requests = Request.query.all()
         for request_info in requests:
-            if(request_info != []):
-                print(request_info)
-                user_requesting = get_user_by_id(request_info[1])
-                print(user_requesting)
-                request_strings.append(f"{list(user_requesting[0])[1]} requested tutoring in {request_info[3]} it was answered by {request_info[2]}")
-        print(user_requesting[0][1])
-        return render_template("requests.html",data=request_strings)
-
+            if(request_info.tutorID != None):
+                user_requesting = User.query.get(request_info.userID)
+                print(f"tutorID from request {request_info.tutorID}")
+                tutor_responded = Tutor.query.get(request_info.tutorID)
+                print(tutor_responded.userID)
+                tutor_responded_user = User.query.get(tutor_responded.userID)
+                new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has completed tutoring in {request_info.unit} by {tutor_responded_user.userEmail}"}
+                requests_array.append(new_request)
+        return render_template("requests.html", requests=requests_array)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -153,6 +157,7 @@ def view_requests():
         requests_array = []
         requests = Request.query.all()
         for request_info in requests:
+            print(request_info.tutorID)
             if(request_info.tutorID == None):
                 user_requesting = User.query.get(request_info.userID)
                 new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has requested tutoring in {request_info.unit}"}
@@ -163,14 +168,16 @@ def view_requests():
 @login_required    
 def accept_request():
     requestID = request.form.get('selected_id')
-    print(request.form.get('selected_id'))
     requestPicked = Request.query.get(requestID)
     tutor = session['userID']
     if tutor == requestPicked.userID:
         flash("Cannot accept own request")
     else:
         try:
-            requestPicked.tutorID = tutor
+            new_tutor = Tutor(userID=session['userID'])
+            db.session.add(new_tutor)
+            db.session.commit()
+            requestPicked.tutorID = new_tutor.tutorID
             db.session.commit()
             flash("Request accepted successfully")
         except Exception as e:
@@ -254,7 +261,10 @@ def print_user_data():
     users = User.query.all()
     for user in users:
         print(f'User ID: {user.userID}, Email: {user.userEmail}, Password: {user.userPassword}')
-
+def print_tutor_data():
+    tutors = Tutor.query.all()
+    for tutor in tutors:
+        print(f'User ID: {tutor.userID}, Tutor ID {tutor.tutorID}')
 
 
 #Main
