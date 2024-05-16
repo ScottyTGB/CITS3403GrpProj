@@ -6,4 +6,59 @@
 <title>{% block title %}Tutoring Requests{% endblock %}</title>
 {% endblock %}
 {% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="list-group">
+        <h5 class="list-group-item">Sort by</h5>
+        <div class="list-group-item">
+          <select class="form-control" id="sort">
+            <option value="name_asc">Name (A-Z)</option>
+            <option value="name_desc">Name (Z-A)</option>
+            <option value="units_asc">Units (Low to High)</option>
+            <option value="units_desc">Units (High to Low)</option>
+            <option value="time_created_asc">Time Created (Oldest to Newest)</option>
+            <option value="time_created_desc">Time Created (Newest to Oldest)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Box 1</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Box 2</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Box 3</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
