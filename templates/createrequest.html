@@ -11,28 +11,33 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            width: 100%;
             align-items: center; 
             justify-content: center; 
             height: 100vh;
             margin: 0; 
             padding: 0; 
-            background: #f5f5f5; 
+            background: white ; 
         }
-            
-        
-        .container {
-            width: 100%;
-            max-width: 500px; 
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
+
+        .form-container {
+            padding: 60px;
+            width: 100%; /* Responsive width */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            background: white; /* Optional: can match design */
+            margin: 100px auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        
+        body {
+            padding-top: 100px; /* If navbar is fixed, adjust this value to the height of the navbar */
+        }
         h1 {
-            color: #333;
+            color: #0A2647;
             margin-bottom: 20px;
         }
         div {
+            margin-top: 20px;
             margin-bottom: 20px;
         }
         label {
@@ -59,18 +64,21 @@
         button:hover {
             background-color: #45a049;
         }
+
+        
         @media (max-width: 600px) {
-            form {
+            .form-container {
                 width: 100%;
                 padding: 10px;
+                margin-top: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="form-container">
         <h1>Request A Tutor</h1>
-        <form action="___" method="_____">
+        <form action="/createrequest" method="POST">
             <div>
                 <label for="Unit Code">What is the unit code?</label>
                 <input type="text" name="Unit Code" id="Unit Code" placeholder="The 4 letter and 4 number code e.g. CITS1000" required>
