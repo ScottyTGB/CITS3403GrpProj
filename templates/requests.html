@@ -18,6 +18,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/requests.css') }}">
     <title>Computute</title>
   </head>
   <!-- Navbar -->
@@ -37,6 +38,7 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/requests">View Tutoring Requests</a></li>
               <li><a class="dropdown-item" href="/createrequest">Create a tutoring request</a></li>
+              <li><a class="dropdown-item" href="/completedrequests">Successful Tutoring Requests</a></li>
             </ul>
           </li>
           <li class="nav-item">
@@ -51,10 +53,13 @@
   </nav>
   <!-- Body -->
   <body>
-    <div id='info_section'>
-        {% for data in data %}
-            <p>{{ data }}</p>
-        {% endfor %}
-    </div>        
+    {% for request in requests %}
+      <div id="requestId={{ request['id'] }}" class="RequestItem">
+        {{ request['content'] }}
+        <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
+          <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>
+        </form>        
+      </div>
+    {% endfor %}      
   </body>
 </html>
