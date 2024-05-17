@@ -1,5 +1,4 @@
 .env
-user.db
+__pycache__
 config.env
 /pycache/*
-

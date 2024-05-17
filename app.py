@@ -296,6 +296,14 @@ def print_tutor_data():
     for tutor in tutors:
         print(f'User ID: {tutor.userID}, Tutor ID {tutor.tutorID}')
 
+#Sitemap route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route("/sitemap")
+def sitemap():
+    return render_template("sitemap.html")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 #Main
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 

@@ -1,3 +1,4 @@
+/* Nav */
 nav {
   background: transparent;
   width: 100%;
@@ -10,28 +11,73 @@ nav.scrolled {
   background: white;
 }
 
+/* Responsive nav */
+button.nav-toggler {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.bi-list {
+  font-size: 2.5em;
+  padding: 15px 15px;
+  background: transparent;
+}
+
+/* Offcanvas menu */
+
+.offcanvas-body h1 {
+  margin: 15px 0;
+}
+
+.offcanvas-body h1 a:focus {
+  border: 2.5px dotted black;
+}
+
+.offcanvas-body h1 a {
+  color: black;
+  text-decoration: none;
+}
+
+.offcanvas-body h1:first-child a {
+  color: white;
+  background-color: black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Nav brand */
 .nav-brand {
   font-size: 1.5em;
   font-weight: 700;
   text-decoration: none;
 }
 
-h2.nav-brand1, h2.nav-brand2 {
+.nav-brand1, .nav-brand2 {
   display: inline-block;
 }
 
-h2.nav-brand1 {
+.nav-brand1 {
   color: rgb(10, 38, 71);
 }
 
-h2.nav-brand2 {
+.nav-brand2 {
   font-family: Pacifico, cursive !important;
   color: rgb(44, 116, 179);
 }
 
-.search-field {
-  width: 100%;
-  height: 40px;
+/* Search bar */
+nav .search-field {
+  width: 400px;
+  height: 50px;
   border: 1px solid;
   border-color: rgb(44, 116, 179);
   border-radius: 5px 0 0 5px;
@@ -40,17 +86,92 @@ h2.nav-brand2 {
   transition: border-color 0.1s ease-in-out;
 }
 
-.search-field:focus {
+nav .search-field:focus {
   outline: none;
   border-color: rgb(10, 38, 71);
 }
 
-.search-btn {
-  height: 40px;
+nav .search-btn {
+  height: 50px;
   background: rgb(44, 116, 179);
   color: white;
   border: none;
   border-radius: 0 5px 5px 0;
   font-size: 1em;
   padding: 0 15px 0 13px; /* Visually centered */
+}
+
+.search-field {
+  width: 400px;
+  height: 50px;
+  border: 1px solid;
+  border-color: rgb(44, 116, 179);
+  border-radius: 5px 0 0 5px;
+  padding: 0 20px;
+  font-size: 1em;
+  transition: border-color 0.1s ease-in-out;
+}
+
+/* Mobile view search */
+@media screen and (max-width: 600px) {
+  .search-field {
+    width: 100%;
+  }
+}
+
+.search-field:focus {
+  outline: none;
+  border-color: rgb(10, 38, 71);
+}
+
+.search-btn {
+  height: 50px;
+  background: rgb(44, 116, 179);
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  font-size: 1em;
+  padding: 0 15px 0 13px; /* Visually centered */
+}
+
+#searchForm {
+  transition: opacity 0.5s, visibility 0.5s;
+  opacity: 1; 
+  visibility: visible;
+}
+
+#searchForm.hide-search {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Footer */
+.inner-footer {
+  background-color: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+}
+
+.inner-footer li a {
+  color: black;
+  text-decoration: none;
+  margin: 5px;
+  font-size: 1.2em;
+  border: 1px dotted transparent;
+}
+
+.inner-footer li a:hover {
+  border: 1px dotted black;
+}
+
+/* Mobile view footer */
+@media (max-width: 768px) {
+  .inner-footer {
+    text-align: left;
+  }
+
+  .inner-footer li a {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
 }
