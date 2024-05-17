@@ -112,6 +112,7 @@ nav .search-btn {
   transition: border-color 0.1s ease-in-out;
 }
 
+/* Mobile view search */
 @media screen and (max-width: 600px) {
   .search-field {
     width: 100%;
@@ -142,4 +143,35 @@ nav .search-btn {
 #searchForm.hide-search {
   opacity: 0;
   visibility: hidden;
+}
+
+/* Footer */
+.inner-footer {
+  background-color: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+}
+
+.inner-footer li a {
+  color: black;
+  text-decoration: none;
+  margin: 5px;
+  font-size: 1.2em;
+  border: 1px dotted transparent;
+}
+
+.inner-footer li a:hover {
+  border: 1px dotted black;
+}
+
+/* Mobile view footer */
+@media (max-width: 768px) {
+  .inner-footer {
+    text-align: left;
+  }
+
+  .inner-footer li a {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
 }
