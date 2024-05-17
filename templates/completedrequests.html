@@ -34,13 +34,21 @@
         </div>
       </div>
     </div>
-    <body>
-      {% for request in requests %}
-        <div id="requestId={{ request['id'] }}" class="RequestItem">
-          {{ request['content'] }}   
-        </div>
-      {% endfor %}      
-    </body>
+    <div class="col-md-9 items-section">
+      <div class="row">
+        {% for request in requests %}
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">             
+                <h5 class="card-title">{{ request['unit'] }}</h5>
+                <p class="card-text">Requested by: {{ request['user'] }} </p>
+                <p class="card-text">Completed by: {{ request['tutor'] }} </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
