@@ -235,6 +235,7 @@ def login():
         print_user_data() 
         username = request.form['username']
         password = request.form['password']
+        session['username'] = request.form['username']
         
         user = User.query.filter_by(userEmail=username).first()
         
@@ -285,6 +286,7 @@ def do_register():
 @login_required
 def logout():
     logout_user()
+    session.pop('username', None)
     return redirect('/home')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def print_user_data():
