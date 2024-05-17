@@ -10,18 +10,22 @@
 body {
   padding-top: 100px; /* If navbar is fixed, adjust this value to the height of the navbar */
 }
+
 h1 {
   color: #0A2647;
   margin-bottom: 20px;
 }
-div {
+
+.input-group {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
 label {
   display: block;
   margin-bottom: 8px;
 }
+
 input[type="text"],
 input[type="number"],
 textarea {
@@ -31,7 +35,7 @@ textarea {
   border-radius: 4px;
   box-sizing: border-box;
 }
-button {
+.form-container button {
   background-color: #4CAF50;
   color: white;
   padding: 10px 15px;
@@ -39,10 +43,10 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
-button:hover {
+
+.form-container button:hover {
   background-color: #45a049;
 }
-
 
 @media (max-width: 600px) {
   .form-container {
