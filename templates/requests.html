@@ -34,6 +34,7 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
     <div class="col-md-9 items-section">
       <div class="row">
         <div class="col-md-4">
@@ -146,6 +147,18 @@
         </div>
       </div>
     </div>
+=======
+    <body>
+      {% for request in requests %}
+        <div id="requestId={{ request['id'] }}" class="RequestItem">
+          {{ request['content'] }}
+          <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
+            <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>
+          </form>        
+        </div>
+      {% endfor %}      
+    </body>
+>>>>>>> refs/remotes/origin/template
   </div>
 </div>
 {% endblock %}

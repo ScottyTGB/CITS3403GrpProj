@@ -1,13 +1,16 @@
-from flask import Flask, flash, redirect, render_template, request, session, abort
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
-import sqlite3
-import initdb 
+from flask_sqlalchemy import SQLAlchemy
+from initdb import User, Tutor, Request
 import os
 #TODO
 #Add in remember me cookie
 #Change all routes to be if statements rather than seperate route methods
 #SQLalchemy security stuff
+#Flash doesn't work?
+
+
 
 #Find and set secret key, start app
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,31 +27,45 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = secret_key = os.environ.get('SECRET_KEY')
 
-app.config["DATABASE"] = "user.db"
-app.config["DATABASE"] = "tutor.db"
-app.config["DATABASE"] = "request.db"
+# app.config["DATABASE"] = "user.db"
+# app.config["DATABASE"] = "tutor.db"
+# app.config["DATABASE"] = "request.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Create user, request and login manager
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-class User(UserMixin):
+class User(db.Model, UserMixin):
+    userID = db.Column(db.Integer, primary_key=True)
+    userEmail = db.Column(db.String(150), unique=True, nullable=False)
+    userPassword = db.Column(db.String(150), nullable=False)
+    requests = db.relationship('Request', back_populates='user')
+    
+    def get_id(self):
+        return self.userID
 
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
+class Tutor(db.Model):
+    tutorID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.userID'), nullable=False)
+    requests = db.relationship('Request', back_populates='tutor')
 
-class Request:
+    def get_id(self):
+        return self.userID    
 
-    def __init__(self, id, requestor, tutor, unit):
-        self.id = id
-        self.requestor = requestor
-        self.tutor = tutor
-        self.unit = unit
-
+class Request(db.Model):
+    requestID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('user.userID'))
+    tutorID = db.Column(db.Integer, db.ForeignKey('tutor.tutorID'))
+    unit = db.Column(db.String(150), nullable=False)
+    user = db.relationship('User', back_populates='requests')
+    tutor = db.relationship('Tutor', back_populates='requests')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Helper functions
@@ -60,55 +77,24 @@ def check_hash(hash,password):
     return check_password_hash(hash,password)
 
 def get_requests():
-    requests_array = []
-    con_requests = sqlite3.connect("request.db")
-    cur_requests = con_requests.cursor()
-    cur_requests.execute("select * from user")
-    for row in cur_requests.fetchall():
-        requests_array.append([str(value) for value in row])
-    return(requests_array)
+    return Request.query.all()
 
 def load_request(requestID):
-    requests_dict = {}
-    request_db = get_requests()
-    for request in request_db:
-        requests_dict[request[0]] = Request(*request)
-    return requests_dict.get(requestID)
+    return Request.query.get(requestID)
 
 def get_users():
-    user_array = []
-    con_students = sqlite3.connect("user.db")  
-    cur_students = con_students.cursor()        
-    cur_students.execute("select * from user")   
-    for row in cur_students.fetchall():
-        user_array.append([str(value) for value in row])
-    return(user_array)
+    return User.query.all()
 
+def get_user_by_id(userID):
+    return User.query.get(userID)
+    
 @login_manager.user_loader
-def load_user(username):
-    user_dict = {}
-    users_in_db = get_users()
-    for user_data in users_in_db:
-        user_dict[user_data[1]] = User(*user_data)
-
-    return user_dict.get(username)
+def load_user(userID):
+    return User.query.get(int(userID))
 
 def check_databases():
-    dbs = ["request.db","tutor.db","user.db"]
-    for db in dbs:
-        if not (os.path.isfile(db)):
-            match db:
-                case "request.db":
-                    initdb.create_request_table()
-                case "tutor.db":
-                    initdb.create_tutor_table()
-                case "user.db":
-                    initdb.create_user_table()
-
-def get_db():
-    db = sqlite3.connect(app.config["DATABASE"])
-    db.row_factory = sqlite3.Row
-    return db
+    with app.app_context():
+        db.create_all()
 
 #Testing user
 @app.route('/profile')
@@ -122,54 +108,112 @@ def profile():
 #Create Request route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/createrequest', methods=["GET","POST"])
+@login_required
 def create_request():
     if request.method == "GET":
         return render_template("createrequest.html")
     elif request.method == "POST":
-        requestor = session['userID']
         unit = request.form['unit']
-
-        if(requestor and unit):
+        requestor = session['userID']
+        if requestor and unit:
             try:
-                with sqlite3.connect("request.db") as con_user:  
-                    cur_user = con_user.cursor()    
-                    cur_user.execute("INSERT INTO request (userID,tutorID,unit) VALUES (?,?,?)",(requestor,None,unit))    
-                    con_user.commit()
-            except:
-                con_user.rollback()
-                flash("Eror entering request to database")
+                new_request = Request(userID=requestor, tutorID=None, unit=unit)
+                db.session.add(new_request)
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                flash("Error entering request to database: " + str(e))
         else:
             flash("Enter valid unit name")
         return redirect('/requests')    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#Requests route
+#View my requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@app.route('/requests', methods=["GET","POST"])
+@app.route('/myrequests',methods=["GET"])
+@login_required
+def view_my_requests():
+    if request.method == "GET":
+        requests_array = []
+        requests = Request.query.all()
+        for request_info in requests:
+            if(request_info.userID == session['userID'] and request_info.tutorID == None):
+                new_request = {"id": request_info.requestID, "content": f"Your request for {request_info.unit} is yet to be accepted"}
+                requests_array.append(new_request)
+        for request_info in requests:
+            if(request_info.tutorID != None):
+                tutor_responded = Tutor.query.get(request_info.tutorID)
+                tutor_responded_user = User.query.get(tutor_responded.userID)
+                if(tutor_responded_user.userID == session['userID']):
+                    user_requesting = User.query.get(request_info.userID)
+                    new_request = {"id": request_info.requestID, "content": f"You accepted {user_requesting.userEmail}'s request for {request_info.unit}"}
+                    requests_array.append(new_request)
+        for request_info in requests:
+            if(request_info.userID == session['userID'] and request_info.tutorID != None):
+                tutor_responded = Tutor.query.get(request_info.tutorID)
+                tutor_responded_user = User.query.get(tutor_responded.userID)
+                new_request = {"id": request_info.requestID, "content": f"Your request for {request_info.unit} has been completed by {tutor_responded_user.userEmail}"}
+                requests_array.append(new_request)
+        return render_template("myrequests.html", requests=requests_array)    
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#View completed requests route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/completedrequests', methods=["GET"])
+def view_completed_requests():
+    if request.method == "GET":
+        requests_array = []
+        requests = Request.query.all()
+        for request_info in requests:
+            if(request_info.tutorID != None):
+                user_requesting = User.query.get(request_info.userID)
+                print(f"tutorID from request {request_info.tutorID}")
+                tutor_responded = Tutor.query.get(request_info.tutorID)
+                print(tutor_responded.userID)
+                tutor_responded_user = User.query.get(tutor_responded.userID)
+                new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has completed tutoring in {request_info.unit} by {tutor_responded_user.userEmail}"}
+                requests_array.append(new_request)
+        return render_template("completedrequests.html", requests=requests_array)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#View Requests route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/requests', methods=["GET"])           
 def view_requests():
     if request.method == "GET":
-
-        return render_template("requests.html")
-    elif request.method == "POST":
-        #When tutor clicks accept
-        #Need to be able to get details of request from table, HTML will have ID, call by ID and then check if requestor and tutor ID are the same if so then fail
-        #Get requestID from HTML
-        requestID = None
-        requestPicked = load_request(requestID)
-        tutor = session['userID']
-        if(tutor == requestPicked.requestor):
-            flash("Cannot accept own request")
-        if(tutor):
-            try:
-                with sqlite3.connect("request.db") as con_user:  
-                    cur_user = con_user.cursor()    
-                    #Change this to be an update clause updatign the value of tutorID to sessionID
-                    #cur_user.execute("INSERT INTO request (userID,tutorID,unit) VALUES (?,?,?)",(requestor,None,unit))    
-                    con_user.commit()
-            except:
-                con_user.rollback()
-                flash("Eror entering request to database")            
-
+        requests_array = []
+        requests = Request.query.all()
+        for request_info in requests:
+            print(request_info.tutorID)
+            if(request_info.tutorID == None):
+                user_requesting = User.query.get(request_info.userID)
+                new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has requested tutoring in {request_info.unit}"}
+                requests_array.append(new_request)
+        return render_template("requests.html", requests=requests_array)
+    
+@app.route('/acceptrequest', methods=["POST"])           
+@login_required    
+def accept_request():
+    requestID = request.form.get('selected_id')
+    requestPicked = Request.query.get(requestID)
+    tutor = session['userID']
+    if tutor == requestPicked.userID:
+        flash("Cannot accept own request")
+    else:
+        try:
+            new_tutor = Tutor(userID=session['userID'])
+            db.session.add(new_tutor)
+            db.session.commit()
+            requestPicked.tutorID = new_tutor.tutorID
+            db.session.commit()
+            flash("Request accepted successfully")
+        except Exception as e:
+            db.session.rollback()
+            flash("Error entering request to database: " + str(e))
+    return redirect('/requests')    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Home route
@@ -185,55 +229,54 @@ def home():
 
 #Login route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@app.route('/login', methods=['POST'])
-def do_login():
-    username = request.form['username']
-    password = request.form['password']
-    
-    user = load_user(username)
-    
-    if user and check_hash(user.password,password):
-        login_user(user)
-        session['user'] = username
-        session['userID'] = user.id
-        print(session['user'])
-        return redirect('/home')
-    else:
-        return 'Invalid username or password'       
-
-@app.route('/login', methods=['GET'])
-def load_login():
-    return render_template("login.html")
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        print_user_data() 
+        username = request.form['username']
+        password = request.form['password']
+        
+        user = User.query.filter_by(userEmail=username).first()
+        
+        if user and check_hash(user.userPassword, password):
+            login_user(user)
+            session['user'] = username
+            session['userID'] = user.userID
+            print(f"Login successful for user: {username}") 
+            return redirect(url_for('home'))
+        else:
+            print(f"Login failed for user: {username}") 
+            flash('Invalid username or password')
+    return render_template("login.html")      
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Register route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-@app.route('/register', methods=['GET'])
-def load_register():
-    return render_template("register.html")
-
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def do_register():
-    username = request.form['username']
-    password = request.form['password']
-    user = load_user(username)
-    if user:
-        flash("Username already taken")
-        #Create login button for user to move to login
-    elif(username and password):
-        hashed = hash_pass(password)
-        try:
-            with sqlite3.connect("user.db") as con_user:  
-                cur_user = con_user.cursor()    
-                cur_user.execute("INSERT INTO user (userEmail,userPassword) VALUES (?,?)",(username,hashed))    
-                con_user.commit()
-            do_login()                     
-        except:
-            con_user.rollback()
-            flash("Eror entering user to database")
-    else:
-        flash("Enter valid username and password")
-    return redirect('/home')
+    if request.method == 'POST':
+        print_user_data() 
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(userEmail=username).first()
+        if user:
+            flash("Username already taken")
+        elif username and password:
+            hashed = hash_pass(password)
+            try:
+                new_user = User(userEmail=username, userPassword=hashed)
+                db.session.add(new_user)
+                db.session.commit()
+                login_user(new_user)
+                session['user'] = username
+                session['userID'] = new_user.userID
+                return redirect('/home')
+            except Exception as e:
+                db.session.rollback()
+                flash("Error entering user to database: " + str(e))
+        else:
+            flash("Enter valid username and password")
+    return render_template("register.html")
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Logout route
@@ -242,8 +285,25 @@ def do_register():
 @login_required
 def logout():
     logout_user()
-    return home()
+    return redirect('/home')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def print_user_data():
+    users = User.query.all()
+    for user in users:
+        print(f'User ID: {user.userID}, Email: {user.userEmail}, Password: {user.userPassword}')
+def print_tutor_data():
+    tutors = Tutor.query.all()
+    for tutor in tutors:
+        print(f'User ID: {tutor.userID}, Tutor ID {tutor.tutorID}')
+
+#Sitemap route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route("/sitemap")
+def sitemap():
+    return render_template("sitemap.html")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 #Main
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
