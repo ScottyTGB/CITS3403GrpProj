@@ -2,16 +2,18 @@
 {% block head %}
 {{ super() }}
 <!-- Stylesheets -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/createrequest.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/requests.css') }}">
 <title>{% block title %}Tutoring Requests{% endblock %}</title>
 {% endblock %}
 {% block content %}
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <form id="searchForm" class="d-flex">
+        <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
+        <button class="search-btn" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
       </form>
     </div>
   </div>
