@@ -34,131 +34,23 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
     <div class="col-md-9 items-section">
       <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biden</p>
-              <p class="card-text">Required Hours: 5hrs</p>
+        {% for request in requests %}
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">CITS3403</h5>
+                <p class="card-text">Requested by: Joe Biren</p>
+                <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
+                  <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>
+                </form> 
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biren</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Kim Jong Un</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biden</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biren</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Kim Jong Un</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biden</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biren</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Kim Jong Un</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biden</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Joe Biren</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">CITS5505</h5>
-              <p class="card-text">Name: Kim Jong Un</p>
-              <p class="card-text">Required Hours: 5hrs</p>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
-=======
-    <body>
-      {% for request in requests %}
-        <div id="requestId={{ request['id'] }}" class="RequestItem">
-          {{ request['content'] }}
-          <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
-            <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>
-          </form>        
-        </div>
-      {% endfor %}      
-    </body>
->>>>>>> refs/remotes/origin/template
   </div>
 </div>
 {% endblock %}
