@@ -52,12 +52,12 @@
                 <li><a class="dropdown-item" href="/completedrequests">Successfully completed requests</a></li>                                
               </ul>
             </li>
-            {% if session['username'] %}
+            {% if session['user'] %}
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/profile">{{ session['username'] }}</a>
+                <a class="nav-link" href="/profile">{{ session['user'] }}</a>
               </li>
             {% else %}
               <li class="nav-item">
