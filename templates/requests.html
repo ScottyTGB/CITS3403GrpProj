@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block head %}
 {{ super() }}
-<!-- Stylesheets -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/requests.css') }}">
 <title>{% block title %}Tutoring Requests{% endblock %}</title>
 {% endblock %}
@@ -11,6 +10,7 @@
     <h1 class="title">Tutoring Requests</h1>
     <div class="col-md-12">
       <form id="searchForm" class="d-flex">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
         <button class="search-btn" type="submit">
           <i class="bi bi-search"></i>
@@ -39,10 +39,11 @@
         {% for request in requests %}
           <div class="col-md-4">
             <div class="card">
-              <div class="card-body">             
+              <div class="card-body">
                 <h5 class="card-title">{{ request['unit'] }}</h5>
                 <p class="card-text">Requested by: {{ request['user'] }} </p>
                 <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                   <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>
                 </form>
               </div>

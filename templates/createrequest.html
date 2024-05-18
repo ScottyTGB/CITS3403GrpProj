@@ -10,6 +10,7 @@
   <div class="form-container">
     <h1>Request A Tutor</h1>
     <form action="/createrequest" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <div class="input-group">
       <label for="unit">What is the unit code?</label>
       <input type="text" name="unit" id="unit" placeholder="The 4 letter and 4 number code e.g. CITS1000" required>
