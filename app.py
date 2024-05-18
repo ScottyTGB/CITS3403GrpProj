@@ -113,6 +113,7 @@ def create_request():
     if request.method == "GET":
         return render_template("createrequest.html")
     elif request.method == "POST":
+        print(request.form['unit'])
         unit = request.form['unit']
         requestor = session['userID']
         if requestor and unit:
@@ -134,28 +135,34 @@ def create_request():
 @login_required
 def view_my_requests():
     if request.method == "GET":
-        requests_array = []
+        completed_array = []
+        open_array = []
+        taken_array = []                
         requests = Request.query.all()
         for request_info in requests:
+
+            #Requests I have made but not taken
             if(request_info.userID == session['userID'] and request_info.tutorID == None):
-                new_request = {"id": request_info.requestID, "content": f"Your request for {request_info.unit} is yet to be accepted"}
-                requests_array.append(new_request)
-        for request_info in requests:
+                new_request = {"id": request_info.requestID, "unit": request_info.unit}
+                open_array.append(new_request)
+            
+            #Requests I have taken on
             if(request_info.tutorID != None):
                 tutor_responded = Tutor.query.get(request_info.tutorID)
                 tutor_responded_user = User.query.get(tutor_responded.userID)
                 if(tutor_responded_user.userID == session['userID']):
                     user_requesting = User.query.get(request_info.userID)
-                    new_request = {"id": request_info.requestID, "content": f"You accepted {user_requesting.userEmail}'s request for {request_info.unit}"}
-                    requests_array.append(new_request)
-        for request_info in requests:
+                    new_request = {"id": request_info.requestID, "user": user_requesting.userEmail, "unit": request_info.unit, "tutor": tutor_responded_user.userEmail}
+                    taken_array.append(new_request)
+
+            #Requests I have made and have been taken
             if(request_info.userID == session['userID'] and request_info.tutorID != None):
                 tutor_responded = Tutor.query.get(request_info.tutorID)
                 tutor_responded_user = User.query.get(tutor_responded.userID)
-                new_request = {"id": request_info.requestID, "content": f"Your request for {request_info.unit} has been completed by {tutor_responded_user.userEmail}"}
-                requests_array.append(new_request)
-        return render_template("myrequests.html", requests=requests_array)    
+                new_request = {"id": request_info.requestID, "user": user_requesting.userEmail, "unit": request_info.unit, "tutor": tutor_responded_user.userEmail}
+                taken_array.append(new_request)
 
+        return render_template("myrequests.html", completed=completed_array, taken=taken_array, open=open_array)    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -169,11 +176,9 @@ def view_completed_requests():
         for request_info in requests:
             if(request_info.tutorID != None):
                 user_requesting = User.query.get(request_info.userID)
-                print(f"tutorID from request {request_info.tutorID}")
                 tutor_responded = Tutor.query.get(request_info.tutorID)
-                print(tutor_responded.userID)
                 tutor_responded_user = User.query.get(tutor_responded.userID)
-                new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has completed tutoring in {request_info.unit} by {tutor_responded_user.userEmail}"}
+                new_request = {"id": request_info.requestID, "user": user_requesting.userEmail, "unit": request_info.unit, "tutor": tutor_responded_user.userEmail}
                 requests_array.append(new_request)
         return render_template("completedrequests.html", requests=requests_array)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,7 +195,7 @@ def view_requests():
             print(request_info.tutorID)
             if(request_info.tutorID == None):
                 user_requesting = User.query.get(request_info.userID)
-                new_request = {"id": request_info.requestID, "content": f"{user_requesting.userEmail} has requested tutoring in {request_info.unit}"}
+                new_request = {"id": request_info.requestID, "user": user_requesting.userEmail, "unit": request_info.unit}
                 requests_array.append(new_request)
         return render_template("requests.html", requests=requests_array)
     
@@ -289,7 +294,7 @@ def do_register():
 @login_required
 def logout():
     logout_user()
-    session.pop('username', None)
+    session.clear()
     return redirect('/home')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def print_user_data():
