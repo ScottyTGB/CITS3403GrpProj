@@ -10,6 +10,8 @@ body {
 
 .login {
     text-align: center;
+    width: 100%;
+    max-width: 400px;
 }
 
 .login-screen {
@@ -43,4 +45,25 @@ body {
     width: 100%;
     padding: 15px;
     font-size: 20px;
+    background-color: #2980B9;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+}
+
+/* Media query for screens smaller than 600px */
+@media (max-width: 600px) {
+    body {
+        font-size: 20px;
+    }
+
+    .app-title {
+        font-size: 28px;
+    }
+
+    .login-field,
+    .btn {
+        padding: 20px;
+        font-size: 24px;
+    }
 }
