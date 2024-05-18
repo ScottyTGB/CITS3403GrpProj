@@ -39,12 +39,12 @@
         {% for request in requests %}
           <div class="col-md-4">
             <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">CITS3403</h5>
-                <p class="card-text">Requested by: Joe Biren</p>
+              <div class="card-body">             
+                <h5 class="card-title">{{ request['unit'] }}</h5>
+                <p class="card-text">Requested by: {{ request['user'] }} </p>
                 <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
                   <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>
-                </form> 
+                </form>
               </div>
             </div>
           </div>

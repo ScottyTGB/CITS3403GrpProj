@@ -2,7 +2,7 @@
 {% block head %}
 {{ super() }}
 <!-- Stylesheets -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/requests.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/taken.css') }}">
 <title>{% block title %}Tutoring Requests{% endblock %}</title>
 {% endblock %}
 {% block content %}
@@ -34,13 +34,51 @@
         </div>
       </div>
     </div>
-    <body>
-      {% for request in requests %}
-        <div id="requestId={{ request['id'] }}" class="RequestItem">
-          {{ request['content'] }}   
-        </div>
-      {% endfor %}      
-    </body>
+    <!---Open Requests--->
+    <div class="col-md-9 items-section">
+      <div class="row">
+        {% for request in open %}
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">             
+                <h5 class="card-title">{{ request['unit'] }}</h5>
+                <p class="card-text">Your request is yet to be answered</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!---Requestes you have taken--->
+    <div class="col-md-9 items-section">
+      <div class="row">
+        {% for request in taken %}
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">             
+                <h5 class="card-title">{{ request['unit'] }}</h5>
+                <p class="card-text">You have taken this tutoring request from {{ request['user'] }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!---Completed Requests by others--->
+    <div class="col-md-9 items-section">
+      <div class="row">
+        {% for request in completed %}
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">             
+                <h5 class="card-title">{{ request['unit'] }}</h5>
+                <p class="card-text">You requested this and it was completed by {{ request['tutor'] }} </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
