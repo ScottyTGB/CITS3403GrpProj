@@ -291,7 +291,7 @@ def do_register():
 @login_required
 def logout():
     logout_user()
-    session.pop('username', None)
+    session.clear()
     return redirect('/home')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def print_user_data():
