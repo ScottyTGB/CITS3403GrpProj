@@ -265,7 +265,10 @@ def do_register():
         print_user_data() 
         username = request.form['username']
         password = request.form['password']
+        session['username'] = request.form['username']
+        
         user = User.query.filter_by(userEmail=username).first()
+        
         if user:
             flash("Username already taken")
         elif username and password:
