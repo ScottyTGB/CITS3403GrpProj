@@ -19,6 +19,12 @@ body {
     padding: 30px;
     border-radius: 5px;
 }
+
+.login-screen a {
+    color: #2980B9;
+    text-decoration: none;
+}
+
 .login-field::placeholder {
     font-family: Arial, sans-serif;
 }
