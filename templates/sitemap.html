@@ -1,6 +1,23 @@
 {% extends "layout.html" %}
 {% block head %}
 {{ super() }}
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sitemap.css') }}">
+<title>{% block title %}Sitemap{% endblock %}</title>
 {% endblock %}
 {% block content %}
+<div class="sitemap">
+  <div class="container">
+    <h1>Sitemap</h1>
+    <ul>
+      <li><a href="/home">Home</a></li>
+      <li><a href="/createrequest">Request a tutor</a></li>
+      <li><a href="/requests">Accept a tutoring request</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/myrequests">My requests</a></li>
+      <li><a href="/completedrequests">Completed requests</a></li>
+    </ul>
+  </div>
+</div>
 {% endblock %}

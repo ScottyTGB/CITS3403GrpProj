@@ -1,0 +1,26 @@
+.sitemap {
+  margin-top: 90px;
+}
+
+.sitemap h1 {
+  font-size: 24px;
+  color: #333;
+}
+
+.sitemap ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sitemap ul li {
+  margin-bottom: 10px;
+}
+
+.sitemap ul li a {
+  color: #2980B9;
+  text-decoration: none;
+}
+
+.sitemap ul li a:hover {
+  text-decoration: underline;
+}
