@@ -19,10 +19,15 @@ body {
     padding: 30px;
     border-radius: 5px;
 }
+.login-field::placeholder {
+    font-family: Arial, sans-serif;
+}
 
 .app-title {
+    font-family: Arial, sans-serif;
     margin-bottom: 30px;
     font-size: 24px;
+    color: #777;
 }
 
 .login-form {
