@@ -1,5 +1,6 @@
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_wtf import CSRFProtect
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from initdb import User, Tutor, Request
@@ -22,9 +23,9 @@ if os.path.exists(env_path):
             key, value = line.strip().split('=')
             os.environ[key] = value
 
-
+csrf = CSRFProtect()
 app = Flask(__name__)
-
+csrf.init_app(app)
 app.config['SECRET_KEY'] = secret_key = os.environ.get('SECRET_KEY')
 
 # app.config["DATABASE"] = "user.db"
