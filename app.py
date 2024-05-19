@@ -5,13 +5,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from initdb import User, Tutor, Request
 import os
+import sys
 #TODO
 #Add in remember me cookie
-#Change all routes to be if statements rather than seperate route methods
-#SQLalchemy security stuff
 #Flash doesn't work?
-
-
 
 #Find and set secret key, start app
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,9 +25,6 @@ app = Flask(__name__)
 csrf.init_app(app)
 app.config['SECRET_KEY'] = secret_key = os.environ.get('SECRET_KEY')
 
-# app.config["DATABASE"] = "user.db"
-# app.config["DATABASE"] = "tutor.db"
-# app.config["DATABASE"] = "request.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -160,8 +154,9 @@ def view_my_requests():
             if(request_info.userID == session['userID'] and request_info.tutorID != None):
                 tutor_responded = Tutor.query.get(request_info.tutorID)
                 tutor_responded_user = User.query.get(tutor_responded.userID)
+                user_requesting = User.query.get(request_info.userID)
                 new_request = {"id": request_info.requestID, "user": user_requesting.userEmail, "unit": request_info.unit, "tutor": tutor_responded_user.userEmail}
-                taken_array.append(new_request)
+                completed_array.append(new_request)
 
         return render_template("myrequests.html", completed=completed_array, taken=taken_array, open=open_array)    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -195,6 +190,7 @@ def view_requests():
         for request_info in requests:
             print(request_info.tutorID)
             if(request_info.tutorID == None):
+                print(request_info.userID)
                 user_requesting = User.query.get(request_info.userID)
                 new_request = {"id": request_info.requestID, "user": user_requesting.userEmail, "unit": request_info.unit}
                 requests_array.append(new_request)
@@ -307,6 +303,37 @@ def print_tutor_data():
     for tutor in tutors:
         print(f'User ID: {tutor.userID}, Tutor ID {tutor.tutorID}')
 
+#Testing route
+@app.route("/testing")
+def enter_test_data():
+    db.session.query(Request).delete()
+    db.session.query(Tutor).delete()
+    db.session.query(User).delete()
+
+    db.session.commit()
+    course_data = ['CITS5501', 'CITS1402', 'CITS5551', 'CITS5552', 'CITS3301', 'CITS4401', 'CITS2402', 'CITS5508', 'CITS3401', 'CITS5504', 'CITS4009', 'CITS4402', 'CITS5553', 'CITS3004', 'CITS1003', 'CITS3006', 'CITS3010']
+
+    test_data = []
+    for i in range(15):
+        test_data.append(User(userEmail=f"user{i+1}@example.com", userPassword=hash_pass('1')))
+        test_data.append(Request(userID=i+1, tutorID=None, unit=course_data[i]))
+    db.session.add_all(test_data)
+    db.session.commit()
+
+    users = User.query.all()
+    for user in users:
+        print(f'User ID: {user.userID}, Email: {user.userEmail}, Password: {user.userPassword}')
+
+    for i in range(5):
+        new_tutor = Tutor(userID=i+2)
+        db.session.add(new_tutor)
+        db.session.commit()
+        requestPicked = Request.query.get(i+1)
+        requestPicked.tutorID = new_tutor.tutorID
+        db.session.commit()        
+
+    return redirect("/requests")    
+
 #Sitemap route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route("/sitemap")
@@ -318,8 +345,8 @@ def sitemap():
 
 #Main
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-if __name__ == "__main__":
+if __name__ == "__main__":      
     check_databases()
     app.secret_key = os.urandom(12)
-    app.run(debug=True,port=4000)
+    app.run(debug=True,port=4000)  
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
