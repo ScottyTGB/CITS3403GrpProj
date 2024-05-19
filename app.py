@@ -242,7 +242,7 @@ def login():
         user = User.query.filter_by(userEmail=username).first()
         
         if user and check_hash(user.userPassword, password):
-            login_user(user)
+            login_user(user,remember=True)
             session['user'] = username
             session['userID'] = user.userID
             print(f"Login successful for user: {username}") 
@@ -273,7 +273,7 @@ def do_register():
                 new_user = User(userEmail=username, userPassword=hashed)
                 db.session.add(new_user)
                 db.session.commit()
-                login_user(new_user)
+                login_user(new_user,remember=True)
                 session['user'] = username
                 session['userID'] = new_user.userID
                 return redirect('/home')
