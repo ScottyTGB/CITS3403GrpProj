@@ -41,7 +41,8 @@
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">{{ request['unit'] }}</h5>
-                <p class="card-text">Requested by: {{ request['user'] }} </p>
+                <p class="card-text">Requested by:</p>
+                <p class="card-text">{{ request['user'] }}</p>
                 <form action="/acceptrequest" method="POST" id="requestId={{ request['id'] }}">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                   <button data-request-id="{{ request['id'] }}", name="selected_id" value="{{ request['id'] }}">Accept</button>

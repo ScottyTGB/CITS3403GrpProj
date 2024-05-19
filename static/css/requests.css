@@ -15,10 +15,16 @@
 }
 
 .card button {
-  background-color: #4CAF50;  /* Green color for button */
-  color: white;  /* White text color */
-  padding: 10px 20px;  /* Add some padding to button */
-  border: none;  /* Remove default button border */
-  border-radius: 5px;  /* Round corners for buttons */
-  cursor: pointer;  /* Change cursor to pointer on hover */
+  background-color: #2980B9;
+  color: white;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card button:hover {
+  background-color: #2C74B3;
 }
