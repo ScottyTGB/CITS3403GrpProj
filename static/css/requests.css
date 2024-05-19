@@ -10,7 +10,7 @@
     margin-top: 15px;
 }
 
-button {
+.card button {
   background-color: #4CAF50;  /* Green color for button */
   color: white;  /* White text color */
   padding: 10px 20px;  /* Add some padding to button */

@@ -146,6 +146,16 @@ nav .search-btn {
 }
 
 /* Footer */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+}
+
 .inner-footer {
   background-color: #f8f9fa;
   padding: 20px;
