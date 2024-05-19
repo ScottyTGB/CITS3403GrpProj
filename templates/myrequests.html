@@ -34,9 +34,9 @@
         </div>
       </div>
     </div>
-    <!---Open Requests--->
     <div class="col-md-9 items-section">
       <div class="row">
+        <!---Open Requests--->
         {% for request in open %}
           <div class="col-md-4">
             <div class="card">
@@ -47,11 +47,7 @@
             </div>
           </div>
         {% endfor %}
-      </div>
-    </div>
-    <!---Requestes you have taken--->
-    <div class="col-md-9 items-section">
-      <div class="row">
+        <!---Requests you have taken--->
         {% for request in taken %}
           <div class="col-md-4">
             <div class="card">
@@ -64,11 +60,7 @@
             </div>
           </div>
         {% endfor %}
-      </div>
-    </div>
-    <!---Completed Requests by others--->
-    <div class="col-md-9 items-section">
-      <div class="row">
+        <!---Completed Requests by others--->
         {% for request in completed %}
           <div class="col-md-4">
             <div class="card">
