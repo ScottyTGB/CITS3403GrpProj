@@ -10,8 +10,9 @@
   <div class="row">
     <h1 class="title">My Requests</h1>
     <div class="col-md-12">
-      <form id="searchForm" class="d-flex">
-        <input class="search-field" type="search" placeholder="Search your requests..." aria-label="Search">
+      <form action="/searchmy" method="POST" id="searchForm" class="d-flex">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>              
+        <input name="searched_unit" id="searched_unit" class="search-field" type="search" placeholder="Search my requests..." aria-label="Search">
         <button class="search-btn" type="submit">
           <i class="bi bi-search"></i>
         </button>
@@ -34,9 +35,9 @@
         </div>
       </div>
     </div>
-    <!---Open Requests--->
     <div class="col-md-9 items-section">
       <div class="row">
+        <!---Open Requests--->
         {% for request in open %}
           <div class="col-md-4">
             <div class="card">
@@ -47,33 +48,28 @@
             </div>
           </div>
         {% endfor %}
-      </div>
-    </div>
-    <!---Requestes you have taken--->
-    <div class="col-md-9 items-section">
-      <div class="row">
+        <!---Requests you have taken--->
         {% for request in taken %}
           <div class="col-md-4">
             <div class="card">
               <div class="card-body">             
                 <h5 class="card-title">{{ request['unit'] }}</h5>
-                <p class="card-text">Requested by: {{ request['user'] }}</p>
+                <p class="card-text">Requested by:</p>
+                <p>{{ request['user'] }}</p>
                 <p class="card-text">Completed by: You </p>
               </div>
             </div>
           </div>
         {% endfor %}
-      </div>
-    </div>
-    <!---Completed Requests by others--->
-    <div class="col-md-9 items-section">
-      <div class="row">
+        <!---Completed Requests by others--->
         {% for request in completed %}
           <div class="col-md-4">
             <div class="card">
               <div class="card-body">             
                 <h5 class="card-title">{{ request['unit'] }}</h5>
-                <p class="card-text">You requested this and it was completed by {{ request['tutor'] }} </p>
+                <p>Requested by: You</p>
+                <p>Completed by:</p>
+                <p class="card-text">{{ request['tutor'] }}</p>
               </div>
             </div>
           </div>
