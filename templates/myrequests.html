@@ -20,9 +20,24 @@
     </div>
   </div>
   <div class="row mb-5">
-    <!---Open Requests--->
+    <div class="col-md-3 sort-section">
+      <div class="list-group">
+        <h5 class="list-group-item">Sort by</h5>
+        <div class="list-group-item">
+          <select class="form-control" id="sort">
+            <option value="name_asc">Name (A-Z)</option>
+            <option value="name_desc">Name (Z-A)</option>
+            <option value="units_asc">Units (Low to High)</option>
+            <option value="units_desc">Units (High to Low)</option>
+            <option value="time_created_asc">Time Created (Oldest to Newest)</option>
+            <option value="time_created_desc">Time Created (Newest to Oldest)</option>
+          </select>
+        </div>
+      </div>
+    </div>
     <div class="col-md-9 items-section">
       <div class="row">
+        <!---Open Requests--->
         {% for request in open %}
           <div class="col-md-4">
             <div class="card">
@@ -33,33 +48,28 @@
             </div>
           </div>
         {% endfor %}
-      </div>
-    </div>
-    <!---Requestes you have taken--->
-    <div class="col-md-9 items-section">
-      <div class="row">
+        <!---Requests you have taken--->
         {% for request in taken %}
           <div class="col-md-4">
             <div class="card">
               <div class="card-body">             
                 <h5 class="card-title">{{ request['unit'] }}</h5>
-                <p class="card-text">Requested by: {{ request['user'] }}</p>
+                <p class="card-text">Requested by:</p>
+                <p>{{ request['user'] }}</p>
                 <p class="card-text">Completed by: You </p>
               </div>
             </div>
           </div>
         {% endfor %}
-      </div>
-    </div>
-    <!---Completed Requests by others--->
-    <div class="col-md-9 items-section">
-      <div class="row">
+        <!---Completed Requests by others--->
         {% for request in completed %}
           <div class="col-md-4">
             <div class="card">
               <div class="card-body">             
                 <h5 class="card-title">{{ request['unit'] }}</h5>
-                <p class="card-text">You requested this and it was completed by {{ request['tutor'] }} </p>
+                <p>Requested by: You</p>
+                <p>Completed by:</p>
+                <p class="card-text">{{ request['tutor'] }}</p>
               </div>
             </div>
           </div>
