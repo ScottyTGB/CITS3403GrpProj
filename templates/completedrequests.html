@@ -10,8 +10,9 @@
   <div class="row">
     <h1 class="title">Completed Tutoring Requests</h1>
     <div class="col-md-12">
-      <form id="searchForm" class="d-flex">
-        <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
+      <form action="/searchcomp" method="POST" id="searchForm" class="d-flex">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>              
+        <input name="searched_unit" id="searched_unit" class="search-field" type="search" placeholder="Find a completed request..." aria-label="Search">
         <button class="search-btn" type="submit">
           <i class="bi bi-search"></i>
         </button>

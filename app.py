@@ -126,14 +126,20 @@ def create_request():
 
 #View my requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@app.route('/myrequests',methods=["GET"])
+@app.route('/myrequests/<searched>', methods=["GET"])
+@app.route('/myrequests', methods=["GET"])
+@app.route('/myrequests/', methods=["GET"])
 @login_required
-def view_my_requests():
+def view_my_requests(searched = None):
     if request.method == "GET":
         completed_array = []
         open_array = []
         taken_array = []                
-        requests = Request.query.all()
+        if(searched != None):
+            query = db.session.query(Request).filter(Request.unit.like(f'%{searched}%'))
+            requests = query.all()
+        else:
+            requests = Request.query.all()
         for request_info in requests:
 
             #Requests I have made but not taken
@@ -164,11 +170,17 @@ def view_my_requests():
 
 #View completed requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route('/completedrequests/<searched>', methods=["GET"])
 @app.route('/completedrequests', methods=["GET"])
-def view_completed_requests():
+@app.route('/completedrequests/', methods=["GET"])
+def view_completed_requests(searched = None):
     if request.method == "GET":
         requests_array = []
-        requests = Request.query.all()
+        if(searched != None):
+            query = db.session.query(Request).filter(Request.unit.like(f'%{searched}%'))
+            requests = query.all()
+        else:
+            requests = Request.query.all()
         for request_info in requests:
             if(request_info.tutorID != None):
                 user_requesting = User.query.get(request_info.userID)
@@ -182,11 +194,17 @@ def view_completed_requests():
 
 #View Requests route
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@app.route('/requests', methods=["GET"])           
-def view_requests():
+@app.route('/requests/<searched>', methods=["GET"])
+@app.route('/requests', methods=["GET"]) 
+@app.route('/requests/', methods=["GET"])           
+def view_requests(searched = None):
     if request.method == "GET":
         requests_array = []
-        requests = Request.query.all()
+        if(searched != None):
+            query = db.session.query(Request).filter(Request.unit.like(f'%{searched}%'))
+            requests = query.all()
+        else:
+            requests = Request.query.all()
         for request_info in requests:
             print(request_info.tutorID)
             if(request_info.tutorID == None):
@@ -339,6 +357,27 @@ def enter_test_data():
 @app.route("/sitemap")
 def sitemap():
     return render_template("sitemap.html")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Search route
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@app.route("/searchcomp", methods=['POST'])
+@app.route("/searchmy", methods=['POST'])
+@app.route("/search", methods=['POST'])
+def search_requests():
+    search_string = request.form["searched_unit"]
+    page = request.url_rule
+    print(page)
+    if(page.rule == "/searchmy"):
+        return redirect(url_for("view_my_requests", searched=search_string))
+    elif(page.rule == "/searchcomp"):
+        print("hello")
+        print(page.rule)
+        return redirect(url_for("view_completed_requests", searched=search_string)) 
+    else:
+        print(page.rule)
+        return redirect(url_for("view_requests", searched=search_string))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

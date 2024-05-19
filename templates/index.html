@@ -18,8 +18,9 @@
           <h3 class="text-center">Find the right tutor, right away</h3>
           <div class="d-flex justify-content-center align-items-center">
             <div class="input-group mb-3">
-              <form class="d-flex">
-                <input class="search-field" type="search" placeholder="Find a CITS unit..." aria-label="Search">
+              <form action="/search" method="POST" class="d-flex">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>              
+                <input class="search-field" type="search" name="searched_unit" id="searched_unit" placeholder="Find a CITS unit..." aria-label="Search">
                 <button class="search-btn" type="submit">
                   <i class="bi bi-search"></i>
                 </button>

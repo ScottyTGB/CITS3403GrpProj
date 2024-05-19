@@ -10,8 +10,9 @@
   <div class="row">
     <h1 class="title">My Requests</h1>
     <div class="col-md-12">
-      <form id="searchForm" class="d-flex">
-        <input class="search-field" type="search" placeholder="Search your requests..." aria-label="Search">
+      <form action="/searchmy" method="POST" id="searchForm" class="d-flex">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>              
+        <input name="searched_unit" id="searched_unit" class="search-field" type="search" placeholder="Search my requests..." aria-label="Search">
         <button class="search-btn" type="submit">
           <i class="bi bi-search"></i>
         </button>
@@ -19,21 +20,6 @@
     </div>
   </div>
   <div class="row mb-5">
-    <div class="col-md-3 sort-section">
-      <div class="list-group">
-        <h5 class="list-group-item">Sort by</h5>
-        <div class="list-group-item">
-          <select class="form-control" id="sort">
-            <option value="name_asc">Name (A-Z)</option>
-            <option value="name_desc">Name (Z-A)</option>
-            <option value="units_asc">Units (Low to High)</option>
-            <option value="units_desc">Units (High to Low)</option>
-            <option value="time_created_asc">Time Created (Oldest to Newest)</option>
-            <option value="time_created_desc">Time Created (Newest to Oldest)</option>
-          </select>
-        </div>
-      </div>
-    </div>
     <!---Open Requests--->
     <div class="col-md-9 items-section">
       <div class="row">
