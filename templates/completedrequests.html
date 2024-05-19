@@ -41,8 +41,10 @@
             <div class="card">
               <div class="card-body">             
                 <h5 class="card-title">{{ request['unit'] }}</h5>
-                <p class="card-text">Requested by: {{ request['user'] }} </p>
-                <p class="card-text">Completed by: {{ request['tutor'] }} </p>
+                <p class="card-text">Requested by:</p>
+                <p class="card-text">{{ request['user'] }} </p>
+                <p class="card-text">Completed by:</p>
+                <p class="card-text">{{ request['tutor'] }}</p>
               </div>
             </div>
           </div>

@@ -10,6 +10,10 @@
     margin-top: 15px;
 }
 
+.card p {
+    margin: 0;
+}
+
 .card button {
   background-color: #4CAF50;  /* Green color for button */
   color: white;  /* White text color */
