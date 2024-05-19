@@ -1,14 +1,14 @@
 .form-container {
   padding: 60px;
-  width: 100%; /* Responsive width */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  background: white; /* Optional: can match design */
+  width: 75%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: white;
   margin: 100px auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 body {
-  padding-top: 100px; /* If navbar is fixed, adjust this value to the height of the navbar */
+  padding-top: 100px;
 }
 
 h1 {
@@ -36,8 +36,9 @@ textarea {
   box-sizing: border-box;
 }
 .form-container button {
-  background-color: #4CAF50;
+  background-color: #2980B9;
   color: white;
+  width: 100%;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
@@ -45,7 +46,8 @@ textarea {
 }
 
 .form-container button:hover {
-  background-color: #45a049;
+  background-color: #2C74B3;
+  color: white;
 }
 
 @media (max-width: 600px) {
